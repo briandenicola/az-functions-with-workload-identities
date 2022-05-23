@@ -1,0 +1,17 @@
+{
+    "version": "2.0",
+    "logging": {
+        "fileLoggingMode": "debugOnly",
+        "logLevel": {
+          "default": "Debug"
+        }
+    },
+    "extensions": {
+        "eventHub": {
+            "maxBatchSize": 10,
+            "prefetchCount": 300,
+            "batchCheckpointFrequency": 1,
+            "transportType" : "amqpWebSockets"
+        }
+    }
+}

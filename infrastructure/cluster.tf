@@ -9,7 +9,14 @@ resource "azurerm_kubernetes_cluster" "this" {
   api_server_authorized_ip_ranges = ["${chomp(data.http.myip.body)}/32"]
 
   identity {
-    type                    = "SystemAssigned"
+    type                      = "UserAssigned"
+    identity_ids              = [ azurerm_user_assigned_identity.aks_identity.id ]
+  }
+
+  kubelet_identity {
+    client_id                 = azurerm_user_assigned_identity.aks_kubelet_identity.client_id
+    object_id                 = azurerm_user_assigned_identity.aks_kubelet_identity.principal_id
+    user_assigned_identity_id = azurerm_user_assigned_identity.aks_kubelet_identity.id
   }
 
   default_node_pool  {
@@ -43,7 +50,19 @@ resource "azurerm_kubernetes_cluster" "this" {
 
 }
 
-data "azurerm_public_ip" "aks" {
-  name                = reverse(split("/", tolist(azurerm_kubernetes_cluster.this.network_profile.0.load_balancer_profile.0.effective_outbound_ips)[0]))[0]
-  resource_group_name = azurerm_kubernetes_cluster.this.node_resource_group
+resource "azapi_update_resource" "this" {
+  depends_on = [
+    azurerm_kubernetes_cluster.this
+  ]
+
+  type        = "Microsoft.ContainerService/managedClusters@2021-07-01"
+  resource_id = azurerm_kubernetes_cluster.this.id
+
+  body = jsonencode({
+    properties = {
+      podIdentityProfile = {
+        enabled = true
+      }
+    }
+  })
 }

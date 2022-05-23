@@ -1,0 +1,6 @@
+apiVersion: v2
+name: keygenerator
+description: A sample application to show how Azure Functions work with Workload Identities
+type: application
+version: 0.0.1
+appVersion: 1.0.0

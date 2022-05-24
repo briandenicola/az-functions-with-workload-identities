@@ -22,6 +22,8 @@ spec:
   triggers:
   - type: azure-eventhub
     metadata:
+      eventHubNamespace: {{ .Values.EVENTHUB_NAMESPACE_NAME }}
+      eventHubName: requests
       consumerGroup: {{ .Values.CONSUMER_GROUP }}
       checkpointStrategy: azureFunction
     authenticationRef:

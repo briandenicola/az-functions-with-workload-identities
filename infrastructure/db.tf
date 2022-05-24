@@ -37,3 +37,9 @@ resource "azurerm_postgresql_flexible_server_database" "this" {
   collation           = "en_US.utf8"
   charset             = "utf8"
 }
+
+resource "azurerm_key_vault_secret" "postgresql_connection_string" {
+  name         = "postgresqlconnection"
+  value        = "host=${local.postgresql_name}.postgres.database.azure.com user=manager password=${random_password.postgresql_user_password.result} port=5432 dbname=${local.postgresql_database_name} sslmode=require"
+  key_vault_id = azurerm_key_vault.this.id
+}

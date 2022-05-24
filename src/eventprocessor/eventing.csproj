@@ -6,6 +6,7 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.EventHubs" Version="5.1.0" />
+    <PackageReference Include="Dapr.AzureFunctions.Extension" Version="0.10.0-preview01" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="4.1.0" />
     <PackageReference Include="Azure.Core" Version="1.24.0" />
     <PackageReference Include="Azure.Identity" Version="1.5.0" />

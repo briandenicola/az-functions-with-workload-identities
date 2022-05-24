@@ -10,6 +10,12 @@ spec:
       component: eventprocessor
   template:
     metadata:
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/config: "dapr-config"
+        dapr.io/app-id: "eventprocessor"
+        dapr.io/log-level: "info"
+        dapr.io/config-hash: {{ include (print $.Template.BasePath "/components.yaml") . | sha256sum }}
       labels:
         app: keygenerator
         component: eventprocessor

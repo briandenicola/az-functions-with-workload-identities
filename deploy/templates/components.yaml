@@ -1,0 +1,31 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: keyvault
+spec:
+  type: secretstores.azure.keyvault
+  version: v1
+  metadata:
+  - name: vaultName
+    value: {{ .Values.KEYVAULT_NAME }} 
+  - name: spnClientId
+    value: {{ .Values.MSI_CLIENTID }} 
+---
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: statestore
+spec:
+  type: state.postgresql
+  version: v1
+  metadata:
+  - name: connectionString 
+    secretKeyRef:
+      name: postgresqlconnection
+      key: postgresqlconnection
+  - name: actorStateStore
+    value: "true"
+  - name: keyPrefix
+    value: none
+auth:
+  secretStore: keyvault

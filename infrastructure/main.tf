@@ -20,7 +20,8 @@ locals {
     aks_name                    = "${local.resource_name}-aks"
     eventhub_name               = "${local.resource_name}-eventhub"
     postgresql_name             = "${local.resource_name}-postgresql"
-    postgresql_database_name    = "keys"
+    keyvault_name               = "${local.resource_name}-keyvault"
+    postgresql_database_name    = "results"
 }
 
 resource "azurerm_resource_group" "this" {

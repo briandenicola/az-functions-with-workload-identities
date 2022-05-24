@@ -3,12 +3,18 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>10.0</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <VersionSuffix>10.0.$([System.DateTime]::UtcNow.ToString(mmff))</VersionSuffix>
+    <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionSuffix)</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Azure.Messaging.EventHubs" Version="5.7.0" />
+    <PackageReference Include="Azure.Core" Version="1.24.0" />
+    <PackageReference Include="Azure.Identity" Version="1.5.0" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta2.21617.1" />
   </ItemGroup>
 
 </Project>

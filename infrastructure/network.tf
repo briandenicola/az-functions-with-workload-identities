@@ -12,11 +12,21 @@ resource "azurerm_subnet" "aks" {
   address_prefixes     = ["10.25.2.0/24"]
 }
 
-resource "azurerm_subnet" "servers" {
-  name                 = "servers"
-  resource_group_name  = azurerm_resource_group.this.name
-  virtual_network_name = azurerm_virtual_network.this.name
-  address_prefixes     = ["10.25.3.0/24"]
+resource "azurerm_subnet" "sql" {
+  name                  = "sql"
+  resource_group_name   = azurerm_virtual_network.this.resource_group_name
+  virtual_network_name  = azurerm_virtual_network.this.name
+  address_prefixes      = ["10.25.3.0/24"]
+  service_endpoints    = ["Microsoft.Storage"]
+  delegation {
+    name = "fs"
+    service_delegation {
+      name = "Microsoft.DBforPostgreSQL/flexibleServers"
+      actions = [
+        "Microsoft.Network/virtualNetworks/subnets/join/action",
+      ]
+    }
+  }
 }
 
 resource "azurerm_subnet" "private-endpoints" {
@@ -25,7 +35,6 @@ resource "azurerm_subnet" "private-endpoints" {
   virtual_network_name = azurerm_virtual_network.this.name
   address_prefixes     = ["10.25.4.0/24"]
 }
-
 
 resource "azurerm_network_security_group" "this" {
   name                = "${local.resource_name}-nsg"
@@ -39,7 +48,7 @@ resource "azurerm_subnet_network_security_group_association" "aks" {
 }
 
 resource "azurerm_subnet_network_security_group_association" "servers" {
-  subnet_id                 = azurerm_subnet.servers.id
+  subnet_id                 = azurerm_subnet.sql.id
   network_security_group_id = azurerm_network_security_group.this.id
 }
 

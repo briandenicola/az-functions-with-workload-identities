@@ -19,6 +19,8 @@ locals {
     storage_account_name        = "${random_pet.this.id}${random_id.this.dec}sa"
     aks_name                    = "${local.resource_name}-aks"
     eventhub_name               = "${local.resource_name}-eventhub"
+    postgresql_name             = "${local.resource_name}-postgresql"
+    postgresql_database_name    = "keys"
 }
 
 resource "azurerm_resource_group" "this" {
@@ -27,7 +29,7 @@ resource "azurerm_resource_group" "this" {
   
   tags     = {
     Application = "event-processor"
-    Components  = "aks; functions; workload-identities"
+    Components  = "aks; functions; postgresql; pod-identities"
     DeployedOn  = timestamp()
   }
 }

@@ -22,7 +22,7 @@ spec:
   triggers:
   - type: azure-eventhub
     metadata:
-      consumerGroup: functions-client
+      consumerGroup: {{ .Values.CONSUMER_GROUP }}
       checkpointStrategy: azureFunction
     authenticationRef:
         name: azure-eventhub-auth

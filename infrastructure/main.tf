@@ -20,6 +20,7 @@ locals {
     aks_name                    = "${local.resource_name}-aks"
     eventhub_name               = "${local.resource_name}-eventhub"
     postgresql_name             = "${local.resource_name}-postgresql"
+    keyvault_name               = "${local.resource_name}-keyvault"
     postgresql_database_name    = "keys"
 }
 

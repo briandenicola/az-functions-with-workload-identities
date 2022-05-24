@@ -13,13 +13,12 @@ using Azure.Identity;
 using Azure.Messaging.EventHubs;
 using Microsoft.Extensions.Logging;
 
-
 namespace Eventing
 {
     public static class CommandProcessing
     {
         [FunctionName("CommandProcessing")]
-        public static async Task Run(
+        public static void Run(
         
             [EventHubTrigger(
                 "requests",

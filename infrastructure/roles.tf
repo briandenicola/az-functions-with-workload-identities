@@ -33,8 +33,8 @@ resource "azurerm_role_assignment" "blob" {
 }
 
 resource "azurerm_role_assignment" "hub" {
-  scope                = azurerm_eventhub.this.id
-  role_definition_name = "Azure Event Hubs Data Receiver"
+  scope                = azurerm_eventhub_namespace.this.id
+  role_definition_name = "Azure Event Hubs Data Owner"
   principal_id         = azurerm_user_assigned_identity.aks_pod_identity.principal_id
   skip_service_principal_aad_check = true  
 }

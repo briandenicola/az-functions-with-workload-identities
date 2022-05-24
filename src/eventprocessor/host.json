@@ -10,8 +10,7 @@
         "eventHub": {
             "maxBatchSize": 10,
             "prefetchCount": 300,
-            "batchCheckpointFrequency": 1,
-            "transportType" : "amqpWebSockets"
+            "batchCheckpointFrequency": 1
         }
     }
 }

@@ -7,12 +7,6 @@ resource "azurerm_storage_account" "this" {
   account_kind             = "StorageV2"
 }
 
-resource "azurerm_storage_container" "this" {
-  name                  = "results"
-  storage_account_name  = azurerm_storage_account.this.name
-  container_access_type = "private"
-}
-
 resource "azurerm_private_dns_zone" "privatelink_blob_core_windows_net" {
   name                = "privatelink.blob.core.windows.net"
   resource_group_name = azurerm_resource_group.this.name

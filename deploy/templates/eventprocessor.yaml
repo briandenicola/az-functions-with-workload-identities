@@ -15,13 +15,6 @@ spec:
         component: eventprocessor
         aadpodidbinding: {{ .Values.MSI_SELECTOR  }} 
     spec:
-      securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000  
-        supplementalGroups: [2000]
-        fsGroup: 2000
-        seccompProfile:
-          type: RuntimeDefault
       containers:
       - name: eventprocessor
         image: {{ print .Values.ACR_NAME "/keygenerator/eventprocessor:" .Values.COMMIT_VERSION }}
@@ -34,6 +27,8 @@ spec:
         envFrom:
         - configMapRef:
             name: keygeneratorconfig
+        securityContext:
+          allowPrivilegeEscalation: false
         resources:
           limits:
             cpu: "1"

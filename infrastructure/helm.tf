@@ -11,3 +11,30 @@ resource "helm_release" "keda" {
 
 }
 
+resource "helm_release" "dapr" {
+  depends_on = [
+    azurerm_kubernetes_cluster.this,
+    helm_release.keda
+  ]
+  
+  name              = "dapr"
+  repository        = "https://dapr.github.io/helm-charts"
+  chart             = "dapr"
+  namespace         = "dapr-system"
+  create_namespace  = true
+  version           = "1.7.3"
+  set {
+    name  = "global.mtls.enabled"
+    value = "true"
+  }
+
+  set {
+    name  = "global.logAsJson"
+    value = "true"
+  }
+
+  set {
+    name  = "global.ha.enabled"
+    value = "true"
+  }
+}

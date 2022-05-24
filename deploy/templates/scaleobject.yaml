@@ -15,8 +15,8 @@ metadata:
 spec:
   scaleTargetRef:
     name: eventprocessor
-  minReplicaCount: 0
-  maxReplicaCount: 15
+  minReplicaCount: 1
+  maxReplicaCount: 3
   cooldownPeriod:  120
   pollingInterval: 15
   triggers:

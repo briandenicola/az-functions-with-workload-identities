@@ -23,7 +23,7 @@ resource "azurerm_key_vault" "this" {
   network_acls {
     bypass                    = "AzureServices"
     default_action            = "Deny"
-    ip_rules                  = ["${chomp(data.http.myip.body)}"]
+    ip_rules                  = ["${chomp(data.http.myip.response_body)}"]
   }
 
   access_policy {

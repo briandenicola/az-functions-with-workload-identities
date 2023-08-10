@@ -13,6 +13,11 @@ resource "random_pet" "this" {
   separator = ""
 }
 
+resource "random_password" "password" {
+  length = 25
+  special = true
+}
+
 resource "random_integer" "vnet_cidr" {
   min = 10
   max = 250
@@ -34,10 +39,10 @@ locals {
   storage_account_name     = "${random_pet.this.id}${random_id.this.dec}sa"
   aks_name                 = "${local.resource_name}-aks"
   eventhub_name            = "${local.resource_name}-eventhub"
-  postgresql_name          = "${local.resource_name}-postgresql"
   keyvault_name            = "${local.resource_name}-keyvault"
   workload_identity        = "${local.aks_name}-${var.namespace}-identity"
-  postgresql_database_name = "results"
+  sql_name                 = "${local.resource_name}-sql"
+  database_name            = "results"
   vnet_cidr                = cidrsubnet("10.0.0.0/8", 8, random_integer.vnet_cidr.result)
   pe_subnet_cidir          = cidrsubnet(local.vnet_cidr, 8, 1)
   api_subnet_cidir         = cidrsubnet(local.vnet_cidr, 8, 2)

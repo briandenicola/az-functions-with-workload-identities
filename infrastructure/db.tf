@@ -1,18 +1,18 @@
 resource "random_password" "postgresql_user_password" {
-  length           = 25
-  special          = false
+  length  = 25
+  special = false
 }
 
 resource "azurerm_private_dns_zone" "privatelink_postgres_database_azure_com" {
-  name                      = "privatelink.postgres.database.azure.com"
-  resource_group_name       = azurerm_resource_group.this.name
+  name                = "privatelink.postgres.database.azure.com"
+  resource_group_name = azurerm_resource_group.this.name
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "privatelink_postgres_database_azure_com" {
-  name                    = "${azurerm_virtual_network.this.name}-link"
-  private_dns_zone_name   = azurerm_private_dns_zone.privatelink_postgres_database_azure_com.name
-  resource_group_name     = azurerm_resource_group.this.name
-  virtual_network_id      = azurerm_virtual_network.this.id
+  name                  = "${azurerm_virtual_network.this.name}-link"
+  private_dns_zone_name = azurerm_private_dns_zone.privatelink_postgres_database_azure_com.name
+  resource_group_name   = azurerm_resource_group.this.name
+  virtual_network_id    = azurerm_virtual_network.this.id
 }
 
 resource "azurerm_postgresql_flexible_server" "this" {
@@ -32,10 +32,10 @@ resource "azurerm_postgresql_flexible_server" "this" {
 }
 
 resource "azurerm_postgresql_flexible_server_database" "this" {
-  name                = local.postgresql_database_name
-  server_id           = azurerm_postgresql_flexible_server.this.id
-  collation           = "en_US.utf8"
-  charset             = "utf8"
+  name      = local.postgresql_database_name
+  server_id = azurerm_postgresql_flexible_server.this.id
+  collation = "en_US.utf8"
+  charset   = "utf8"
 }
 
 resource "azurerm_key_vault_secret" "postgresql_connection_string" {

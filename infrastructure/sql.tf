@@ -18,6 +18,13 @@ resource "azurerm_mssql_database" "this" {
   server_id           = azurerm_mssql_server.this.id
 }
 
+resource "azurerm_mssql_firewall_rule" "home" {
+  name             = "AllowHomeNetwork"
+  server_id        = azurerm_mssql_server.this.id
+  start_ip_address = "${chomp(data.http.myip.response_body)}"
+  end_ip_address   = "${chomp(data.http.myip.response_body)}"
+}
+
 resource "azurerm_private_dns_zone" "privatelink_database_windows_net" {
   name                = "privatelink.database.windows.net"
   resource_group_name = azurerm_resource_group.this.name

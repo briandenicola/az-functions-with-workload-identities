@@ -11,6 +11,9 @@ tasks:
     cmds:
     - terraform -chdir=./infrastructure init {{.FLAG}}
     - task: apply
+    - task: creds
+    - task: build
+    - task: deploy
     vars:
       FLAG: '--{{.CLI_ARGS}}'
 
@@ -18,8 +21,6 @@ tasks:
     desc: Applies terraform
     cmds:
     - terraform -chdir=./infrastructure apply -auto-approve
-    - task: creds
-    - task: deploy
     vars:
       REGION: '{{default "southcentralus" .CLI_ARGS}}'
 
@@ -34,7 +35,7 @@ tasks:
       AKS: 
         sh: terraform -chdir=./infrastructure output -raw AKS_CLUSTER_NAME
   
-  builds: 
+  build: 
     desc: Builds Function
     cmds:
     - echo TBD

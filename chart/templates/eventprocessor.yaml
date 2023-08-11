@@ -1,3 +1,19 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ .Values.NAMESPACE }}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ print .Values.APP_IDENTITY_NAME }}
+  namespace: {{ .Values.NAMESPACE }}
+  annotations:
+    azure.workload.identity/client-id: {{ .Values.ARM_WORKLOAD_APP_ID }}
+    azure.workload.identity/tenant-id: {{ .Values.ARM_TENANT_ID }}
+  labels:
+    azure.workload.identity/use: "true"
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -13,21 +29,29 @@ spec:
       labels:
         app: keygenerator
         component: eventprocessor
+        azure.workload.identity/use: "true"
     spec:
+      serviceAccountName: {{ print .Values.APP_IDENTITY_NAME }}
       containers:
       - name: eventprocessor
-        image: {{ print .Values.ACR_NAME "/keygenerator/eventprocessor:" .Values.COMMIT_VERSION }}
+        image: {{ print .Values.ACR_NAME ".azurecr.io/functions-demo:" .Values.COMMIT_VERSION }}
         imagePullPolicy: Always
         env:
+        - name: AzureWebJobsStorage__credential
+          value: managedidentity
+        - name: SQL_CONNECTION__credential
+          value: managedidentity
         - name: EVENTHUB_CONNECTION__credential
           value: managedidentity
         - name: AzureFunctionsJobHost__functions__0
           value: CommandProcessing
+        - name: AZURE_FEDERATED_TOKEN_FILE 
+          value: /var/run/secrets/azure/tokens/azure-identity-token
+        - name: AZUREFUNCTIONS_SQLBINDINGS_TELEMETRY_OPTOUT
+          value: "true"
         envFrom:
         - configMapRef:
             name: keygeneratorconfig
-        securityContext:
-          allowPrivilegeEscalation: false
         resources:
           limits:
             cpu: "1"

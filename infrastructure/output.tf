@@ -13,6 +13,11 @@ output "AKS_CLUSTER_NAME" {
   sensitive = false
 }
 
+output "APP_IDENTITY_NAME" {
+  value     = azurerm_user_assigned_identity.aks_pod_identity.name
+  sensitive = false
+}
+
 output "ARM_WORKLOAD_APP_ID" {
   value     = azurerm_user_assigned_identity.aks_pod_identity.client_id
   sensitive = false
@@ -23,3 +28,17 @@ output "ARM_TENANT_ID" {
   sensitive = false
 }
 
+output "EVENTHUB_NAMESPACE_NAME" {
+  value     = azurerm_eventhub_namespace.this.name
+  sensitive = false
+}
+
+output "WEBJOB_STORAGE_ACCOUNT_NAME" {
+  value     = azurerm_storage_account.this.name
+  sensitive = false
+}
+
+output "SQL_CONNECTION" {
+  value = "Server=${azurerm_mssql_server.this.fully_qualified_domain_name};Database=${local.database_name};Encrypt=true;UserID=${azurerm_user_assigned_identity.aks_pod_identity.client_id};Authentication=Active Directory Managed Identity"
+  sensitive = false
+}

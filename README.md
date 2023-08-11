@@ -6,8 +6,11 @@ It will create write data from an Azure Event Hub into Azure SQL.
 
 This repository uses [Task]() to help with the automation.  Use `task --list` to see the complete list of options
 
-# Infrastructure Setup
+## Technical Details and Configurations
+__TBD__
 
+
+# Infrastructure Setup
 ## Resources Created
 | |  |
 --------------- | --------------- 

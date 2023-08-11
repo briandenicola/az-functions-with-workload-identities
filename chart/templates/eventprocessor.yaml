@@ -38,7 +38,7 @@ spec:
         imagePullPolicy: Always
         env:
         - name: AzureWebJobsStorage__credential
-          value: managedidentity
+          value: workloadidentity
         - name: SQL_CONNECTION__credential
           value: managedidentity
         - name: EVENTHUB_CONNECTION__credential

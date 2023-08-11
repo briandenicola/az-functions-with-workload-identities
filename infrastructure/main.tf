@@ -42,6 +42,7 @@ locals {
   keyvault_name            = "${local.resource_name}-keyvault"
   workload_identity        = "${local.aks_name}-${var.namespace}-identity"
   sql_name                 = "${local.resource_name}-sql"
+  acr_name                 = "${replace(local.resource_name,"-","")}acr"
   database_name            = "results"
   vnet_cidr                = cidrsubnet("10.0.0.0/8", 8, random_integer.vnet_cidr.result)
   pe_subnet_cidir          = cidrsubnet(local.vnet_cidr, 8, 1)

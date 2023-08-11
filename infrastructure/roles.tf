@@ -18,6 +18,13 @@ resource "azurerm_role_assignment" "azurerm_application_insights" {
   skip_service_principal_aad_check = true 
 }
 
+resource "azurerm_role_assignment" "acr_pullrole_nodepool" {
+  scope                            = azurerm_container_registry.this.id
+  role_definition_name             = "AcrPull"
+  principal_id                     = azurerm_user_assigned_identity.aks_kubelet_identity.principal_id
+  skip_service_principal_aad_check = true
+}
+
 resource "azurerm_role_assignment" "blob" {
   scope                = azurerm_storage_account.this.id
   role_definition_name = "Storage Blob Data Contributor"

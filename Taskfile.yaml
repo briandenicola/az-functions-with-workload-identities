@@ -2,8 +2,6 @@ version: '3'
 
 env:
   ACR_NAME: bjdcsa
-  ACR_RG: Core_ContainerRepo_RG
-  COMMIT_VERSION: workloadid-9cc7fb7f16eg 
   
 tasks:
   up:
@@ -37,9 +35,14 @@ tasks:
   
   build: 
     desc: Builds Function
+    dir: src/eventprocessor
     cmds:
-    - echo TBD
-    
+    - az acr login --name {{.ACR_NAME}}
+    - az acr build --image {{.ACR_NAME}}.azurecr.io/functions-demo:{{.GIT_COMMIT}} --registry {{.ACR_NAME}} --file Dockerfile .
+    vars:
+      GIT_COMMIT: 
+        sh: git rev-parse HEAD | head -c 8
+
   deploy:
     desc: Deploys Azure Function Demo via Helm
     cmds:

@@ -1,5 +1,5 @@
 resource "azurerm_eventhub_namespace" "this" {
-  name                     = "${local.eventhub_name}"
+  name                     = local.eventhub_name
   resource_group_name      = azurerm_resource_group.this.name
   location                 = azurerm_resource_group.this.location
   sku                      = "Standard"
@@ -8,18 +8,18 @@ resource "azurerm_eventhub_namespace" "this" {
 }
 
 resource "azurerm_eventhub" "this" {
-  name                  = "requests"
-  namespace_name        = azurerm_eventhub_namespace.this.name
-  resource_group_name   = azurerm_resource_group.this.name
-  partition_count       = 15
-  message_retention     = 7
+  name                = "requests"
+  namespace_name      = azurerm_eventhub_namespace.this.name
+  resource_group_name = azurerm_resource_group.this.name
+  partition_count     = 15
+  message_retention   = 7
 }
 
 resource "azurerm_eventhub_consumer_group" "this" {
-  name                  = "functions-client"
-  namespace_name        = azurerm_eventhub_namespace.this.name
-  eventhub_name         = azurerm_eventhub.this.name
-  resource_group_name   = azurerm_resource_group.this.name
+  name                = "functions-client"
+  namespace_name      = azurerm_eventhub_namespace.this.name
+  eventhub_name       = azurerm_eventhub.this.name
+  resource_group_name = azurerm_resource_group.this.name
 }
 
 resource "azurerm_private_dns_zone" "privatelink_servicebus_windows_net" {

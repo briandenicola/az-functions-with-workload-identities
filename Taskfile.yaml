@@ -1,0 +1,94 @@
+version: '3'
+  
+tasks:
+  up:
+    desc: Creates Azure infrastructure and deploys application code
+    cmds:
+    - terraform -chdir=./infrastructure init {{.FLAG}}
+    - task: apply
+    - task: creds
+    - task: build
+    - task: deploy
+    vars:
+      FLAG: '--{{.CLI_ARGS}}'
+
+  apply: 
+    desc: Applies terraform
+    cmds:
+    - terraform -chdir=./infrastructure apply -auto-approve
+    vars:
+      REGION: '{{default "southcentralus" .CLI_ARGS}}'
+
+  creds:
+    desc: Gets credential file for newly created AKS cluster
+    cmds:
+    - az aks get-credentials -g {{.RG}} -n {{.AKS}} --overwrite-existing
+    - sed -i s/devicecode/azurecli/g ~/.kube/config
+    vars:
+      RG: 
+        sh: terraform -chdir=./infrastructure output -raw AKS_RESOURCE_GROUP
+      AKS: 
+        sh: terraform -chdir=./infrastructure output -raw AKS_CLUSTER_NAME
+  
+  build: 
+    desc: Builds and Pushes Azure Function using ACR Build
+    dir: src/eventprocessor
+    cmds:
+    - az acr login --name {{.ACR_NAME}}
+    - az acr build --image {{.ACR_NAME}}.azurecr.io/functions-demo:{{.COMMIT_VERSION}} --registry {{.ACR_NAME}} --file Dockerfile .
+    vars:
+      COMMIT_VERSION: 
+        sh: git rev-parse HEAD | head -c 8
+      ACR_NAME: 
+        sh: terraform -chdir=./infrastructure output -raw ACR_NAME
+
+  deploy:
+    desc: Deploys Azure Function Demo via Helm
+    cmds:
+    - helm upgrade -i function-demo 
+        --set ACR_NAME="{{.ACR_NAME}}" 
+        --set COMMIT_VERSION={{.COMMIT_VERSION}} 
+        --set APP_IDENTITY_NAME={{.APP_IDENTITY_NAME}} 
+        --set ARM_WORKLOAD_APP_ID={{.ARM_WORKLOAD_APP_ID}} 
+        --set ARM_TENANT_ID={{.ARM_TENANT_ID}} 
+        --set EVENTHUB_NAMESPACE_NAME="{{.EVENTHUB_NAMESPACE_NAME}}" 
+        --set WEBJOB_STORAGE_ACCOUNT_NAME="{{.WEBJOB_STORAGE_ACCOUNT_NAME}}" 
+        --set ARM_WORKLOAD_APP_RESOURCE_ID="{{.ARM_WORKLOAD_APP_RESOURCE_ID}}"
+        --set SQL_CONNECTION="{{.SQL_CONNECTION}}" 
+        ./chart
+    vars:
+      ACR_NAME: 
+        sh: terraform -chdir=./infrastructure output -raw ACR_NAME
+      COMMIT_VERSION: 
+        sh: git rev-parse HEAD | head -c 8
+      APP_IDENTITY_NAME: 
+        sh: terraform -chdir=./infrastructure output -raw APP_IDENTITY_NAME
+      ARM_WORKLOAD_APP_ID: 
+        sh: terraform -chdir=./infrastructure output -raw ARM_WORKLOAD_APP_ID
+      ARM_TENANT_ID:
+        sh: terraform -chdir=./infrastructure output -raw ARM_TENANT_ID
+      EVENTHUB_NAMESPACE_NAME:   
+        sh: terraform -chdir=./infrastructure output -raw EVENTHUB_NAMESPACE_NAME
+      WEBJOB_STORAGE_ACCOUNT_NAME:
+        sh: terraform -chdir=./infrastructure output -raw WEBJOB_STORAGE_ACCOUNT_NAME
+      SQL_CONNECTION:               
+        sh: terraform -chdir=./infrastructure output -raw SQL_CONNECTION
+
+  run:
+    desc: Builds and exeutes Client code
+    dir: src/client
+    cmds:
+    - dotnet run -n {{.EVENTHUB_NAMESPACE_NAME}}
+    vars:
+      EVENTHUB_NAMESPACE_NAME:   
+        sh: terraform -chdir=../../infrastructure output -raw EVENTHUB_NAMESPACE_NAME
+
+  down:
+    desc: Destorys Azure infrastructure and cleans up terraform state files
+    cmds:
+    - cd infrastructure ;
+      rm -rf .terraform.lock.hcl .terraform terraform.tfstate terraform.tfstate.backup .terraform.tfstate.lock.info
+    - az group delete -n {{.RG}} --yes || true
+    vars:
+      RG: 
+        sh: terraform -chdir=./infrastructure output -raw AKS_RESOURCE_GROUP

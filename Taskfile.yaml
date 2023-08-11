@@ -31,7 +31,7 @@ tasks:
         sh: terraform -chdir=./infrastructure output -raw AKS_CLUSTER_NAME
   
   build: 
-    desc: Builds Function
+    desc: Builds and Pushes Azure Function using ACR Build
     dir: src/eventprocessor
     cmds:
     - az acr login --name {{.ACR_NAME}}

@@ -1,7 +1,4 @@
 version: '3'
-
-env:
-  ACR_NAME: bjdcsa
   
 tasks:
   up:
@@ -42,6 +39,8 @@ tasks:
     vars:
       COMMIT_VERSION: 
         sh: git rev-parse HEAD | head -c 8
+      ACR_NAME: 
+        sh: terraform -chdir=./infrastructure output -raw ACR_NAME
 
   deploy:
     desc: Deploys Azure Function Demo via Helm
@@ -58,6 +57,8 @@ tasks:
         --set SQL_CONNECTION="{{.SQL_CONNECTION}}" 
         ./chart
     vars:
+      ACR_NAME: 
+        sh: terraform -chdir=./infrastructure output -raw ACR_NAME
       COMMIT_VERSION: 
         sh: git rev-parse HEAD | head -c 8
       APP_IDENTITY_NAME: 

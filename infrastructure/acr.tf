@@ -29,13 +29,13 @@ resource "azurerm_private_dns_zone_virtual_network_link" "acr" {
 
 
 resource "azurerm_private_endpoint" "acr" {
-  name                      = "ple-${local.acr_name}"
+  name                      = "${local.acr_name}-endpoint"
   resource_group_name       = azurerm_resource_group.this.name
   location                  = azurerm_resource_group.this.location
   subnet_id                 = azurerm_subnet.private-endpoints.id
 
   private_service_connection {
-    name                           = "psc-${local.resource_name}"
+    name                           = "${local.acr_name}-link"
     private_connection_resource_id = azurerm_container_registry.this.id
     subresource_names              = [ "registry" ]
     is_manual_connection           = false

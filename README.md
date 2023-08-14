@@ -119,6 +119,9 @@ NAMESPACE: default
 STATUS: deployed
 REVISION: 9
 TEST SUITE: None
+task: [deploy] kubectl --namespace functions-demo get pods
+NAME                              READY   STATUS    RESTARTS   AGE
+eventprocessor-5465799c7b-rq2ph   1/1     Running   0          23m
 ```
 
 ## Manual Post-Configuration

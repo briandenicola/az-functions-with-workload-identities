@@ -60,6 +60,11 @@ resource "azurerm_network_security_group" "this" {
   resource_group_name = azurerm_resource_group.this.name
 }
 
+resource "azurerm_subnet_network_security_group_association" "api" {
+  subnet_id                 = azurerm_subnet.api.id
+  network_security_group_id = azurerm_network_security_group.this.id
+}
+
 resource "azurerm_subnet_network_security_group_association" "aks" {
   subnet_id                 = azurerm_subnet.nodes.id
   network_security_group_id = azurerm_network_security_group.this.id

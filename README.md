@@ -68,9 +68,7 @@ Example Event Hub Connection:
 | | App Identity |
 
 ## Infrastructure Stand-up 
-
-1. Run the following: `az login`
-1. Run the following: `task up`
+1. Run the following: `az login; task up`
 > **_NOTE:_**: Task up will create the environment, build/push the Azure Function code, and deploy via Helm to the AKS cluster
 
 ### Sample run:

@@ -55,6 +55,7 @@ tasks:
         --set WEBJOB_STORAGE_ACCOUNT_NAME="{{.WEBJOB_STORAGE_ACCOUNT_NAME}}" 
         --set SQL_CONNECTION="{{.SQL_CONNECTION}}" 
         ./chart
+    - kubectl --namespace {{.NAMESPACE}} get pods
     vars:
       ACR_NAME: 
         sh: terraform -chdir=./infrastructure output -raw ACR_NAME
@@ -72,6 +73,8 @@ tasks:
         sh: terraform -chdir=./infrastructure output -raw WEBJOB_STORAGE_ACCOUNT_NAME
       SQL_CONNECTION:               
         sh: terraform -chdir=./infrastructure output -raw SQL_CONNECTION
+      NAMESPACE:               
+        sh: terraform -chdir=./infrastructure output -raw NAMESPACE
 
   run:
     desc: Builds and exeutes Client code

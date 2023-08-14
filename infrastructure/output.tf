@@ -47,3 +47,7 @@ output "SQL_CONNECTION" {
   value = "Server=${azurerm_mssql_server.this.fully_qualified_domain_name};Database=${local.database_name};Encrypt=true;Authentication=Active Directory Managed Identity"
   sensitive = false
 }
+
+output "NAMESPACE" {
+  value = var.namespace
+}

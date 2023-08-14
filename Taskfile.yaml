@@ -53,7 +53,6 @@ tasks:
         --set ARM_TENANT_ID={{.ARM_TENANT_ID}} 
         --set EVENTHUB_NAMESPACE_NAME="{{.EVENTHUB_NAMESPACE_NAME}}" 
         --set WEBJOB_STORAGE_ACCOUNT_NAME="{{.WEBJOB_STORAGE_ACCOUNT_NAME}}" 
-        --set ARM_WORKLOAD_APP_RESOURCE_ID="{{.ARM_WORKLOAD_APP_RESOURCE_ID}}"
         --set SQL_CONNECTION="{{.SQL_CONNECTION}}" 
         ./chart
     vars:

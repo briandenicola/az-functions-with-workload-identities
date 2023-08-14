@@ -19,7 +19,7 @@ namespace Eventing
                 log.LogInformation($"C# Event Hub trigger function processed a message: {eventData.EventBody}");
 
                 var item = new EventItem();
-                //item.Id = Guid.NewGuid();
+                item.Id = Guid.NewGuid();
                 item.Message = eventData.EventBody.ToString();
                 await EventItems.AddAsync(item);
             }

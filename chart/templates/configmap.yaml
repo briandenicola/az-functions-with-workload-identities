@@ -6,12 +6,18 @@ metadata:
 data:
   FUNCTIONS_WORKER_RUNTIME: dotnet
   FUNCTIONS_EXTENSION_VERSION: "~4"
+  AzureFunctionsJobHost__functions__0: CommandProcessing
   AZURE_TENANT_ID: {{ print .Values.ARM_TENANT_ID }}
   AZURE_CLIENT_ID: {{ print .Values.ARM_WORKLOAD_APP_ID }}
+  AZURE_FEDERATED_TOKEN_FILE: /var/run/secrets/azure/tokens/azure-identity-token
+  SQL_CONNECTION__credential: managedidentity
   SQL_CONNECTION: "{{ .Values.SQL_CONNECTION }}"
   SQL_CONNECTION__clientId: {{ .Values.ARM_WORKLOAD_APP_ID }}  
+  AZUREFUNCTIONS_SQLBINDINGS_TELEMETRY_OPTOUT: "true"
+  EVENTHUB_CONNECTION__credential: managedidentity
   EVENTHUB_CONNECTION__clientId: {{ .Values.ARM_WORKLOAD_APP_ID }}  
   EVENTHUB_CONNECTION__fullyQualifiedNamespace: {{ print .Values.EVENTHUB_NAMESPACE_NAME ".servicebus.windows.net" }}
+  AzureWebJobsStorage__credential: workloadidentity
   AzureWebJobsStorage__queueServiceUri: {{ print "https://" .Values.WEBJOB_STORAGE_ACCOUNT_NAME ".queue.core.windows.net" }}
   AzureWebJobsStorage__tableServiceUri: {{ print "https://" .Values.WEBJOB_STORAGE_ACCOUNT_NAME ".table.core.windows.net" }}
   AzureWebJobsStorage__blobServiceUri: {{ print "https://" .Values.WEBJOB_STORAGE_ACCOUNT_NAME ".blob.core.windows.net" }}

@@ -36,19 +36,6 @@ spec:
       - name: eventprocessor
         image: {{ print .Values.ACR_NAME ".azurecr.io/functions-demo:" .Values.COMMIT_VERSION }}
         imagePullPolicy: Always
-        env:
-        - name: AzureWebJobsStorage__credential
-          value: workloadidentity
-        - name: SQL_CONNECTION__credential
-          value: managedidentity
-        - name: EVENTHUB_CONNECTION__credential
-          value: managedidentity
-        - name: AzureFunctionsJobHost__functions__0
-          value: CommandProcessing
-        - name: AZURE_FEDERATED_TOKEN_FILE 
-          value: /var/run/secrets/azure/tokens/azure-identity-token
-        - name: AZUREFUNCTIONS_SQLBINDINGS_TELEMETRY_OPTOUT
-          value: "true"
         envFrom:
         - configMapRef:
             name: keygeneratorconfig

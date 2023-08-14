@@ -1,6 +1,6 @@
 # Overview
 
-A demo repository of using Azure Functions in a Docker container using AKS Workload Identities for binding authentications. There is one outstanding issue - [9266](https://github.com/Azure/azure-functions-host/issues/9266) before Workload Identities is fully supported with Azure Functions and that is with the Function Host.  Please track #9266 for additional information.
+A demo repository of using Azure Functions in a Docker container using AKS Workload Identities for binding authentications. There is one outstanding issue - [9266](https://github.com/Azure/azure-functions-host/issues/9266) before Workload Identities is fully supported with Azure Functions and that is with the Function Host.  Please track [9266](https://github.com/Azure/azure-functions-host/issues/9266) for additional information.
 
 This repository will write data to an Azure Event Hub and use Azure Functions to send that data into Azure SQL.
 
@@ -9,7 +9,7 @@ This repository uses [Task](https://taskfile.dev/installation/) to help with the
 ## Technical Details and Configurations
 Azure Functions has had the ability to run inside a Docker container for several years. Historically,  Functions has used connection strings to authenticate to its dependency resources (Azure Storage) or its bindings (like Azure SQL or Azure Event Hubs).  In 2022,  Azure Functions running in Azure brought Managed Identity support for Triggers and Bindings then eventually to the Functions Host. This repository brings those concepts to Kubernetes 
 
-Azure Functions will leveage [Azure Workload Identities](https://github.com/Azure/azure-workload-identity) for password-less authentication. Workload Identities federates a Azure Managed Identity with a Kuberentes Service Account under which context a pod runs inside AKS.  This Federation allows the projection of a Service Account Token from AKS to services in Azure without requiring a password.
+Azure Functions will leverage  [Azure Workload Identities](https://github.com/Azure/azure-workload-identity) for password-less authentication. Workload Identities federates a Azure Managed Identity with a Kubernetes  Service Account under which context a pod runs inside AKS.  This Federation allows the projection of a Service Account Token from AKS to services in Azure without requiring a password.
 
 ### Azure Function Host 
 One or more Azure Functions runs on top of an Azure Function Host. The Function Host provides the foundational elements that a function needs to run.  It uses Azure Storage (Blobs and Queues) to persistent configuration values.  The Azure Blob setting is defined with the `AzureWebJobsStorage` Environmental variable.  The `__` nomenclature groups Environmental Variables as a collection and is used throughout [Azure Functions Identity based configuration](https://learn.microsoft.com/en-us/azure/azure-functions/functions-reference?tabs=blob#configure-an-identity-based-connection)
@@ -18,6 +18,8 @@ The Azure Managed Identity must be granted the following RBAC roles on the Azure
 * "Storage Account Contributor"
 * "Storage Blob Data Contributor"
 * "Storage Queue Data Contributor"
+
+
 
 Example Configuration:
 ```
@@ -32,8 +34,10 @@ Example Configuration:
   AZURE_FEDERATED_TOKEN_FILE: /var/run/secrets/azure/tokens/azure-identity-token
 ```
 
-### Azure Trigges and Bindings
-Each service that Azure Functions interacts with either by a Trigger or Input/Output requres additional authentication. Each service defines the required roles and connection string format but it definitions all follow the `__` nomenclature to group a collection of common Environmental Variables  
+> **_NOTE:_**: In this repositor, the proper Roles are assigned using Terraform and these configs are defined in the Helm `chart/values.yaml` file that will be populated with values from the Terraform state file.
+
+### Azure Triggers and Bindings
+Each service that Azure Functions interacts with either by a Trigger or Input/Output requires additional authentication. Each service has their own role definitions and connection string format. They do all follow the `__` nomenclature to group a collection of common Environmental Variables.
 
 Example SQL Server Connection:
 ```
@@ -49,6 +53,8 @@ Example Event Hub Connection:
   EVENTHUB_CONNECTION__clientId: fc813289-26f6-465d-a288-3ef982e39157 
   EVENTHUB_CONNECTION__fullyQualifiedNamespace: sampleazure-hub.servicebus.windows.net
 ```
+
+> **_NOTE:_**: In this repositor, these configs are defined in the Helm `chart/values.yaml` file that will be populated with values from the Terraform state file.
 
 # Infrastructure
 ## Resources Created
@@ -98,7 +104,7 @@ task run
 SELECT * FROM dbo.requests 
 ```
 
-# Destory
+# Destroy
 ```bash
 task down
 ```

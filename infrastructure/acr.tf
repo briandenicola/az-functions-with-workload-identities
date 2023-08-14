@@ -6,7 +6,7 @@ resource "azurerm_container_registry" "this" {
   admin_enabled            = false
 
   network_rule_set {
-    default_action = "Deny"
+    default_action = "Allow"
     ip_rule {
       action              = "Allow"
       ip_range            = local.allowed_ip_range

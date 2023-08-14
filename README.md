@@ -19,8 +19,6 @@ The Azure Managed Identity must be granted the following RBAC roles on the Azure
 * "Storage Blob Data Contributor"
 * "Storage Queue Data Contributor"
 
-
-
 Example Configuration:
 ```
   AzureWebJobsStorage__credential: workloadidentity
@@ -33,7 +31,6 @@ Example Configuration:
   AZURE_CLIENT_ID: 75f25ae8-e026-4939-94e7-1714dbbc0c16
   AZURE_FEDERATED_TOKEN_FILE: /var/run/secrets/azure/tokens/azure-identity-token
 ```
-
 > **_NOTE:_**: In this repositor, the proper Roles are assigned using Terraform and these configs are defined in the Helm `chart/values.yaml` file that will be populated with values from the Terraform state file.
 
 ### Azure Triggers and Bindings
@@ -44,7 +41,6 @@ Example SQL Server Connection:
   SQL_CONNECTION__credential: managedidentity
   SQL_CONNECTION__clientId: fc813289-26f6-465d-a288-3ef982e39157 
   SQL_CONNECTION: Server=sampleazure-sql.database.windows.net;Database=results;Encrypt=true;Authentication=Active Directory Managed Identity
-  
 ```
 
 Example Event Hub Connection:
@@ -53,7 +49,6 @@ Example Event Hub Connection:
   EVENTHUB_CONNECTION__clientId: fc813289-26f6-465d-a288-3ef982e39157 
   EVENTHUB_CONNECTION__fullyQualifiedNamespace: sampleazure-hub.servicebus.windows.net
 ```
-
 > **_NOTE:_**: In this repositor, these configs are defined in the Helm `chart/values.yaml` file that will be populated with values from the Terraform state file.
 
 # Infrastructure

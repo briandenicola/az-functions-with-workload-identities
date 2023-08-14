@@ -19,13 +19,13 @@ resource "azurerm_private_dns_zone_virtual_network_link" "privatelink_blob_core_
   virtual_network_id    = azurerm_virtual_network.this.id
 }
 resource "azurerm_private_endpoint" "storage_account" {
-  name                = "${local.storage_account_name}-endpoint"
+  name                = "${local.storage_account_name}-blob-endpoint"
   resource_group_name = azurerm_resource_group.this.name
   location            = azurerm_resource_group.this.location
   subnet_id           = azurerm_subnet.private-endpoints.id
 
   private_service_connection {
-    name                           = "${local.storage_account_name}-link"
+    name                           = "${local.storage_account_name}-blob-link"
     private_connection_resource_id = azurerm_storage_account.this.id
     subresource_names              = ["blob"]
     is_manual_connection           = false
@@ -50,13 +50,13 @@ resource "azurerm_private_dns_zone_virtual_network_link" "privatelink_queue_core
 }
 
 resource "azurerm_private_endpoint" "storage_account_queue" {
-  name                = "${local.storage_account_name}-endpoint"
+  name                = "${local.storage_account_name}-queue-endpoint"
   resource_group_name = azurerm_resource_group.this.name
   location            = azurerm_resource_group.this.location
   subnet_id           = azurerm_subnet.private-endpoints.id
 
   private_service_connection {
-    name                           = "${local.storage_account_name}-link"
+    name                           = "${local.storage_account_name}-queue-link"
     private_connection_resource_id = azurerm_storage_account.this.id
     subresource_names              = ["queue"]
     is_manual_connection           = false

@@ -9,7 +9,7 @@ resource "azurerm_container_registry" "this" {
     default_action = "Deny"
     ip_rule {
       action              = "Allow"
-      ip_range            =  "${local.ip_address}/32"
+      ip_range            = local.allowed_ip_range
     }
   }
   

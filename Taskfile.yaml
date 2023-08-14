@@ -40,7 +40,7 @@ tasks:
       COMMIT_VERSION: 
         sh: git rev-parse HEAD | head -c 8
       ACR_NAME: 
-        sh: terraform -chdir=./infrastructure output -raw ACR_NAME
+        sh: terraform -chdir=../../infrastructure output -raw ACR_NAME
 
   deploy:
     desc: Deploys Azure Function Demo via Helm

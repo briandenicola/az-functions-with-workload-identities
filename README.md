@@ -68,11 +68,58 @@ Example Event Hub Connection:
 | | App Identity |
 
 ## Infrastructure Stand-up 
-```bash
-az login 
-task up
-```
+
+1. Run the following: `az login`
+1. Run the following: `task up`
 > **_NOTE:_**: Task up will create the environment, build/push the Azure Function code, and deploy via Helm to the AKS cluster
+
+### Sample run:
+```bash
+$ az login 
+$ task up
+task: [up] terraform -chdir=./infrastructure init
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
+task: [apply] terraform -chdir=./infrastructure apply -auto-approve
+Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
+
+Outputs:
+
+ACR_NAME = "goldfish3410acr"
+AKS_CLUSTER_NAME = "goldfish-3410-aks"
+AKS_RESOURCE_GROUP = "goldfish-3410_rg"
+APP_IDENTITY_NAME = "goldfish-3410-aks-functions-demo-identity"
+APP_NAME = "goldfish-3410"
+NAMESPACE = "functions-demo"
+ARM_TENANT_ID = "16b3c013-d300-468d-ac64-7eda0820b6d3"
+ARM_WORKLOAD_APP_ID = "15e1d216-73dd-499f-b54e-ad3cbf8ca4d4"
+EVENTHUB_NAMESPACE_NAME = "goldfish-3410-eventhub"
+SQL_CONNECTION = "Server=goldfish-3410-sql.database.windows.net;Database=results;Encrypt=true;Authentication=Active Directory Managed Identity"
+WEBJOB_STORAGE_ACCOUNT_NAME = "goldfish3410sa"
+task: [creds] az aks get-credentials -g goldfish-3410_rg -n goldfish-3410-aks --overwrite-existing
+The behavior of this command has been altered by the following extension: aks-preview
+Merged "goldfish-3410-aks" as current context in /home/admin/.kube/config
+task: [creds] sed -i s/devicecode/azurecli/g ~/.kube/config
+task: [build] az acr login --name goldfish3410acr
+task: [build] az acr build --image goldfish3410acr.azurecr.io/functions-demo:62ec958f --registry goldfish3410acr --file Dockerfile .
+....
+Run ID: cd9 was successful after 1m25s
+task: [deploy] helm upgrade -i function-demo --set ACR_NAME="goldfish3410acr" --set COMMIT_VERSION=62ec958f --set APP_IDENTITY_NAME=goldfish-3410-aks-functions-demo-identity --set ARM_WORKLOAD_APP_ID=15e1d216-73dd-499f-b54e-ad3cbf8ca4d4 --set ARM_TENANT_ID=16b3c013-d300-468d-ac64-7eda0820b6d3 --set EVENTHUB_NAMESPACE_NAME="goldfish-3410-eventhub" --set WEBJOB_STORAGE_ACCOUNT_NAME="goldfish3410sa" --set SQL_CONNECTION="Server=goldfish-3410-sql.database.windows.net;Database=results;Encrypt=true;Authentication=Active Directory Managed Identity" ./chart
+Release "function-demo" has been upgraded. Happy Helming!
+NAME: function-demo
+LAST DEPLOYED: Mon Aug 14 12:52:34 2023
+NAMESPACE: default
+STATUS: deployed
+REVISION: 9
+TEST SUITE: None
+```
 
 ## Manual Post-Configuration
 1.  Assign ${MSI_IDENTITY_NAME} to the VM Scale Set of the AKS nodepool where the Azure Functions runs
@@ -95,16 +142,27 @@ CREATE TABLE dbo.requests ( [Id] UNIQUEIDENTIFIER DEFAULT NEWID()  PRIMARY KEY, 
     * For example: goldfish-2295-aks-functions-demo-identity
 
 # Validate 
-1. Run the following
+1. Run the following: `task run`
+
+### Sample run:
 ```bash
-task run
+$ task run
+task: [run] dotnet run -n goldfish-3410-eventhub
+A batch of 5 events has been published.
 ```
+
+### Validate
 1. Check that the 5 entries were added to the requests table 
 ```
 SELECT * FROM dbo.requests 
 ```
 
 # Destroy
+1. Run the following: `task down`
+
+### Sample run:
 ```bash
-task down
+$ task down
+task: [down] cd infrastructure ; rm -rf .terraform.lock.hcl .terraform terraform.tfstate terraform.tfstate.backup .terraform.tfstate.lock.info
+task: [down] az group delete -n goldfish-3410_rg --yes || true
 ```

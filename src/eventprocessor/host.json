@@ -2,7 +2,14 @@
     "version": "2.0",
     "logging": {
         "logLevel": {
-          "default": "Information"
+            "default": "Information"
+        },
+        "applicationInsights": {
+            "samplingSettings": {
+                "isEnabled": true,
+                "maxTelemetryItemsPerSecond": 1,
+                "excludedTypes": "Exception"
+            }
         }
     },
     "extensions": {

@@ -53,6 +53,7 @@ tasks:
         --set ARM_TENANT_ID={{.ARM_TENANT_ID}} 
         --set EVENTHUB_NAMESPACE_NAME="{{.EVENTHUB_NAMESPACE_NAME}}" 
         --set WEBJOB_STORAGE_ACCOUNT_NAME="{{.WEBJOB_STORAGE_ACCOUNT_NAME}}" 
+        --set APPLICATIONINSIGHTS_CONNECTION_STRING="{{.APPLICATIONINSIGHTS_CONNECTION_STRING}}"
         --set SQL_CONNECTION="{{.SQL_CONNECTION}}" 
         ./chart
     - kubectl --namespace {{.NAMESPACE}} get pods
@@ -75,6 +76,8 @@ tasks:
         sh: terraform -chdir=./infrastructure output -raw SQL_CONNECTION
       NAMESPACE:               
         sh: terraform -chdir=./infrastructure output -raw NAMESPACE
+      APPLICATIONINSIGHTS_CONNECTION_STRING:
+        sh: terraform -chdir=./infrastructure output -raw APPLICATIONINSIGHTS_CONNECTION_STRING
 
   run:
     desc: Builds and exeutes Client code

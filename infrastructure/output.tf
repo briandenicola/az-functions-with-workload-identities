@@ -50,4 +50,10 @@ output "SQL_CONNECTION" {
 
 output "NAMESPACE" {
   value = var.namespace
+  sensitive = false
+}
+
+output "APPLICATIONINSIGHTS_CONNECTION_STRING" {
+  value = azurerm_application_insights.this.connection_string
+  sensitive = false
 }

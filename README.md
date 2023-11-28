@@ -1,8 +1,6 @@
 # Overview
 
-A demo repository of using Azure Functions in a Docker container using AKS Workload Identities for binding authentications. There is one outstanding issue - [9266](https://github.com/Azure/azure-functions-host/issues/9266) before Workload Identities is fully supported with Azure Functions and that is with the Function Host.  Please track [9266](https://github.com/Azure/azure-functions-host/issues/9266) for additional information.
-
-This repository will write data to an Azure Event Hub and use Azure Functions to send that data into Azure SQL.
+A demo repository of using Azure Functions in a Docker container using AKS Workload Identities for binding authentications. This repository will write data to an Azure Event Hub and use Azure Functions to send that data into Azure SQL.
 
 This repository uses [Task](https://taskfile.dev/installation/) to help with the automation.  Use `task --list` to see the complete list of options
 

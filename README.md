@@ -115,10 +115,6 @@ NAME                              READY   STATUS    RESTARTS   AGE
 eventprocessor-5465799c7b-rq2ph   1/1     Running   0          23m
 ```
 
-## Manual Post-Configuration
-1.  Assign ${MSI_IDENTITY_NAME} to the VM Scale Set of the AKS nodepool where the Azure Functions runs
-> **_NOTE:_**: This should be a temporary step while the above issue is being fully addressed
-
 ## SQL Seup
 ## Steps
 1. Log into the Azure SQL Database using SQL Management Studio 

@@ -1,21 +1,32 @@
 version: '3'
-  
+
+vars:
+  NODE_COUNT: 2
+  VM_SKU: Standard_D4ads_v5
+
 tasks:
   up:
     desc: Creates Azure infrastructure and deploys application code
     cmds:
-    - terraform -chdir=./infrastructure init {{.FLAG}}
+    - task: init
     - task: apply
     - task: creds
     - task: build
     - task: deploy
+
+  init: 
+    desc: Initializes Terraform
+    cmds:
+    - terraform -chdir=./infrastructure workspace new {{.REGION}} || true
+    - terraform -chdir=./infrastructure workspace select {{.REGION}}
+    - terraform -chdir=./infrastructure init
     vars:
-      FLAG: '--{{.CLI_ARGS}}'
+      REGION: '{{default "southcentralus" .CLI_ARGS}}'
 
   apply: 
     desc: Applies terraform
     cmds:
-    - terraform -chdir=./infrastructure apply -auto-approve
+    - terraform -chdir=./infrastructure apply -var "region={{.REGION}}" -var "node_count={{.NODE_COUNT}}" -var "vm_size={{.VM_SKU}}" -auto-approve
     vars:
       REGION: '{{default "southcentralus" .CLI_ARGS}}'
 

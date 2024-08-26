@@ -45,7 +45,7 @@ output "WEBJOB_STORAGE_ACCOUNT_NAME" {
 
 output "SQL_CONNECTION" {
   value = "Server=${azurerm_mssql_server.this.fully_qualified_domain_name};Database=${local.database_name};Encrypt=true;Authentication=Active Directory Managed Identity"
-  sensitive = false
+  sensitive = true
 }
 
 output "NAMESPACE" {
